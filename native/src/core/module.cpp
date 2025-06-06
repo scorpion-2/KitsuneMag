@@ -489,15 +489,15 @@ static void prepare_modules() {
         for (dirent *entry; (entry = xreaddir(dir.get()));) {
             if (entry->d_type == DT_DIR) {
                 // Cleanup old module if exists
-                if (faccessat(mfd, entry->d_name, F_OK, 0) == 0) {
-                    int modfd = xopenat(mfd, entry->d_name, O_RDONLY | O_CLOEXEC);
-                    if (faccessat(modfd, "disable", F_OK, 0) == 0) {
-                        auto disable = entry->d_name + "/disable"s;
-                        close(xopenat(ufd, disable.data(), O_RDONLY | O_CREAT | O_CLOEXEC, 0));
-                    }
-                    frm_rf(modfd);
-                    unlinkat(mfd, entry->d_name, AT_REMOVEDIR);
-                }
+              //  if (faccessat(mfd, entry->d_name, F_OK, 0) == 0) {
+                //    int modfd = xopenat(mfd, entry->d_name, O_RDONLY | O_CLOEXEC);
+                  //  if (faccessat(modfd, "disable", F_OK, 0) == 0) {
+                    //    auto disable = entry->d_name + "/disable"s;
+                      //  close(xopenat(ufd, disable.data(), O_RDONLY | O_CREAT | O_CLOEXEC, 0));
+                   // }
+                   // frm_rf(modfd);
+                 //   unlinkat(mfd, entry->d_name, AT_REMOVEDIR);
+              //  }
                 LOGI("Upgrade / New module: %s\n", entry->d_name);
                 renameat(ufd, entry->d_name, mfd, entry->d_name);
             }
@@ -535,8 +535,8 @@ static void collect_modules(bool open_zygisk) {
             return;
         }
         unlinkat(modfd, "update", 0);
-        if (faccessat(modfd, "disable", F_OK, 0) == 0)
-            return;
+       // if (faccessat(modfd, "disable", F_OK, 0) == 0)
+           // return;
 
         module_info info;
         if (zygisk_enabled) {
@@ -647,34 +647,36 @@ static int check_rules_dir(char *buf, size_t sz) {
 }
 
 void disable_modules() {
-    char buf[4096];
-    int off = check_rules_dir(buf, sizeof(buf));
-    foreach_module([&](int, dirent *entry, int modfd) {
-        close(xopenat(modfd, "disable", O_RDONLY | O_CREAT | O_CLOEXEC, 0));
-        if (off) {
-            ssprintf(buf + off, sizeof(buf) - off, "/%s/sepolicy.rule", entry->d_name);
-            unlink(buf);
-            ssprintf(buf + off, sizeof(buf) - off, "/%s/early-mount", entry->d_name);
-            rm_rf(buf);
-        }
-    });
+    //char buf[4096];
+    //int off = check_rules_dir(buf, sizeof(buf));
+    //foreach_module([&](int, dirent *entry, int modfd) {
+        //close(xopenat(modfd, "disable", O_RDONLY | O_CREAT | O_CLOEXEC, 0));
+        //if (off) {
+           // ssprintf(buf + off, sizeof(buf) - off, "/%s/sepolicy.rule", entry->d_name);
+            //unlink(buf);
+          //  ssprintf(buf + off, sizeof(buf) - off, "/%s/early-mount", entry->d_name);
+        //    rm_rf(buf);
+      //  }
+    //});
+    return;
 }
 
 void remove_modules() {
-    char buf[4096];
-    int off = check_rules_dir(buf, sizeof(buf));
-    foreach_module([&](int, dirent *entry, int) {
-        auto uninstaller = MODULEROOT + "/"s + entry->d_name + "/uninstall.sh";
-        if (access(uninstaller.data(), F_OK) == 0)
-            exec_script(uninstaller.data());
-        if (off) {
-            ssprintf(buf + off, sizeof(buf) - off, "/%s/sepolicy.rule", entry->d_name);
-            unlink(buf);
-            ssprintf(buf + off, sizeof(buf) - off, "/%s/early-mount", entry->d_name);
-            rm_rf(buf);
-        }
-    });
-    rm_rf(MODULEROOT);
+    //char buf[4096];
+    //int off = check_rules_dir(buf, sizeof(buf));
+    //foreach_module([&](int, dirent *entry, int) {
+      //  auto uninstaller = MODULEROOT + "/"s + entry->d_name + "/uninstall.sh";
+        //if (access(uninstaller.data(), F_OK) == 0)
+        //    exec_script(uninstaller.data());
+       // if (off) {
+           // ssprintf(buf + off, sizeof(buf) - off, "/%s/sepolicy.rule", entry->d_name);
+         //   unlink(buf);
+            //ssprintf(buf + off, sizeof(buf) - off, "/%s/early-mount", entry->d_name);
+            //rm_rf(buf);
+       // }
+    //});
+    //rm_rf(MODULEROOT);
+    return; 
 }
 
 void exec_module_scripts(const char *stage) {
