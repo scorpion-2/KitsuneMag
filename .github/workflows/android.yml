@@ -35,9 +35,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.sha }}
-         path: |
-            out
-            native/out
+          path: |
+              out
+              native/out
+
           compression-level: 9
 
       - name: Upload mapping and native debug symbols
