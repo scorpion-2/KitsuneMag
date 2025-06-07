@@ -197,7 +197,7 @@ static bool magisk_env() {
     // Directories in /data/adb
     xmkdir(DATABIN, 0755);
     xmkdir(SECURE_DIR "/post-fs-data.d", 0755);
-    xmkdir(SECURE_DIR "/service.d", 0755);
+    //xmkdir(SECURE_DIR "/service.d", 0755);
     restorecon();
 
     if (access(DATABIN "/busybox", X_OK))
