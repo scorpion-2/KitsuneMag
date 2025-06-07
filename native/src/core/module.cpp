@@ -309,9 +309,9 @@ static void load_modules(bool su_mount) {
 
         mount_systemless:
         // Check whether skip mounting
-        strcpy(b, "skip_mount");
-        if (access(buf, F_OK) == 0)
-            continue;
+       // strcpy(b, "skip_mount");
+        //if (access(buf, F_OK) == 0)
+          //  continue;
 
         // Double check whether the system folder exists
         strcpy(b, "system");
@@ -351,9 +351,9 @@ static void load_modules(bool su_mount) {
         char *b = buf + ssprintf(buf, sizeof(buf), "%s/" MODULEMNT "/%s/", get_magisk_tmp(), module);
 
         // Check whether skip mounting
-        strcpy(b, "skip_mount");
-        if (access(buf, F_OK) == 0)
-            continue;
+     //   strcpy(b, "skip_mount");
+       // if (access(buf, F_OK) == 0)
+         //   continue;
 
         // Double check whether the root folder exists
         // new api to mount more partitions: MODDIR/root
@@ -525,15 +525,15 @@ static void foreach_module(Func fn) {
 
 static void collect_modules(bool open_zygisk) {
     foreach_module([=](int dfd, dirent *entry, int modfd) {
-        if (faccessat(modfd, "remove", F_OK, 0) == 0) {
-            LOGI("%s: remove\n", entry->d_name);
-            auto uninstaller = MODULEROOT + "/"s + entry->d_name + "/uninstall.sh";
-            if (access(uninstaller.data(), F_OK) == 0)
-                exec_script(uninstaller.data());
-            frm_rf(xdup(modfd));
-            unlinkat(dfd, entry->d_name, AT_REMOVEDIR);
-            return;
-        }
+       // if (faccessat(modfd, "remove", F_OK, 0) == 0) {
+         //   LOGI("%s: remove\n", entry->d_name);
+           // auto uninstaller = MODULEROOT + "/"s + entry->d_name + "/uninstall.sh";
+           // if (access(uninstaller.data(), F_OK) == 0)
+             //   exec_script(uninstaller.data());
+          //  frm_rf(xdup(modfd));
+           // unlinkat(dfd, entry->d_name, AT_REMOVEDIR);
+           // return;
+      //  }
         unlinkat(modfd, "update", 0);
        // if (faccessat(modfd, "disable", F_OK, 0) == 0)
            // return;
